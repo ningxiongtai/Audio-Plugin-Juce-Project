@@ -32,12 +32,17 @@ public:
     lfoToSet = waveform;
   }
 
+  void setOutputGain(float gain) {
+    outputGainLiner = juce::Decibels::decibelsToGain(gain);
+  }
+
   void setModulationRate(float rateHz) {
     for (auto& lfo : lfos) {
       lfo.setFrequency(rateHz);
     }
 
   }
+
   void process(juce::AudioBuffer<float>& buffer) noexcept {
     // for each frame
     updateLfoWaveform();
@@ -57,6 +62,7 @@ public:
         const auto outputSample = inputSample * modulationValue;
         // set the output sample
         buffer.setSample(channelIndex, frameIndex, outputSample);
+        buffer.applyGain(outputGainLiner);
       }
     }
   }
@@ -79,6 +85,8 @@ private:
   };
   LfoWaveform currentLfo = LfoWaveform::sine;
   LfoWaveform lfoToSet = currentLfo;
+
+  float outputGainLiner {1.0f};
   float getNextLfoValue() {
     return lfos[juce::toUnderlyingType(currentLfo)].processSample(0.f);
   }
