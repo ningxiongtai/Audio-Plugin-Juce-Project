@@ -6,7 +6,8 @@ struct Parameters {
 
   juce::AudioParameterFloat& rate;
   juce::AudioParameterFloat& gain;
-
+  juce::AudioParameterBool& bypassed;
+  juce::AudioParameterChoice& waveform;
   JUCE_DECLARE_NON_COPYABLE(Parameters);
 
   //JUCE_DECLARE_NON_MOVABLE(Parameters);

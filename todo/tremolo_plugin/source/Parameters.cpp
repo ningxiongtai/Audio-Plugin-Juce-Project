@@ -1,6 +1,11 @@
 
 namespace tremolo {
 
+auto& addParameterToProcessor(juce::AudioProcessor& processor, auto parameter) {
+    auto& parameterReference = *parameter;
+    processor.addParameter(parameter.release());
+    return parameterReference;
+}
  namespace  {
      juce::AudioParameterFloat& createModulationRateParameter(juce::AudioProcessor& processor) {
          const auto versionHint = 1;
@@ -13,10 +18,8 @@ namespace tremolo {
              5.f,
              juce::AudioParameterFloatAttributes{}.withLabel("Hz")
                  );
+        return  addParameterToProcessor(processor, std::move(parameter));
 
-         auto& parameterReference = *parameter;
-         processor.addParameter(parameter.release());
-         return parameterReference;
      }
 
      juce::AudioParameterFloat& createGainParameter(juce::AudioProcessor& processor) {
@@ -25,26 +28,44 @@ namespace tremolo {
              return juce::String{value,1};
          });
 
-         auto parameterGain = std::make_unique<juce::AudioParameterFloat>(
+         auto parameter = std::make_unique<juce::AudioParameterFloat>(
              juce::ParameterID{"gain", 1},
              "Gain",
              juce::NormalisableRange<float>{-12.f, 12.f, 0.1f},
              0.0f,
              attribute
              );
-         auto& parameterReferenceGain = *parameterGain;
-         processor.addParameter(parameterGain.release());
-         return parameterReferenceGain;
+         return addParameterToProcessor(processor, std::move(parameter));
 
+     }
+
+     juce::AudioParameterBool& createBypassParameter(juce::AudioProcessor& processor) {
+         const auto versionHint = 1;
+         auto parameter = std::make_unique<juce::AudioParameterBool>(
+             juce::ParameterID{"bypassed", versionHint},
+             "Bypass",
+             false);
+         return addParameterToProcessor(processor, std::move(parameter));
+     }
+
+    juce::AudioParameterChoice& createWaveformParameter(juce::AudioProcessor& processor) {
+         const auto versionHint = 1;
+         auto parameter = std::make_unique<juce::AudioParameterChoice>(
+             juce::ParameterID{"waveform", versionHint},
+             "Modulation Waveform",
+             juce::StringArray{"Sine", "Triangle"},
+             0
+             );
+         return addParameterToProcessor(processor, std::move(parameter));
      }
  }
 
 Parameters::Parameters(juce::AudioProcessor& processor)
-// TODO: create parameters
-// TODO: retrieve references to parameters
-// TODO: add parameters to the processor
-: rate{createModulationRateParameter(processor)}
- , gain{createGainParameter(processor)}
+
+: rate{createModulationRateParameter(processor)},
+  gain{createGainParameter(processor)},
+    bypassed{createBypassParameter(processor)},
+    waveform{createWaveformParameter(processor)}
 {
  
 }
