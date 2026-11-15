@@ -1,4 +1,5 @@
 #pragma once
+#include "LfoVisiualizer.h"
 
 namespace tremolo {
 class PluginEditor : public juce::AudioProcessorEditor {
@@ -11,6 +12,7 @@ private:
   juce::ImageComponent background;
   juce::ImageComponent logo;
 
+  LfoVisiualizer lfoVisiualizer;
   JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(PluginEditor)
 };
 }  // namespace tremolo
