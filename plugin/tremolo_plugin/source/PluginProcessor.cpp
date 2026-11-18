@@ -118,6 +118,7 @@ void PluginProcessor::processBlock(juce::AudioBuffer<float>& buffer,
   tremolo.setModulationRate(parameters.rate.get());
   bypassTransitionSmoother.setBypass(parameters.bypassed.get());
   tremolo.setLfoWaveform(static_cast<Tremolo::LfoWaveform>(parameters.waveform.getIndex()));
+  DBG(parameters.rate.get());
   // apply tremolo
   if (parameters.bypassed.get() && !bypassTransitionSmoother.isTransitioning()) {
 

@@ -1,6 +1,7 @@
 namespace tremolo {
-PluginEditor::PluginEditor(PluginProcessor& p) : AudioProcessorEditor(&p) {
-  background.setImage(juce::ImageCache::getFromMemory(
+PluginEditor::PluginEditor(PluginProcessor& p) : AudioProcessorEditor(&p) ,
+    sliderAttachment{p.getParameterRefs().rate,  rateSlider}{
+    background.setImage(juce::ImageCache::getFromMemory(
       assets::Background_png, assets::Background_pngSize));
 
   logo.setImage(
@@ -12,11 +13,9 @@ PluginEditor::PluginEditor(PluginProcessor& p) : AudioProcessorEditor(&p) {
   rateSlider.setSliderStyle(juce::Slider::Rotary);
   rateSlider.setTextBoxStyle(juce::Slider::NoTextBox,false, 0, 0);
   rateSlider.setPopupDisplayEnabled(true, true, this);
-  rateSlider.setRange(1,30, 0.5);
+
   rateSlider.setTextValueSuffix(" Hz");
-  rateSlider.onValueChange = [this] () {
-    DBG("rate slider changed" << rateSlider.getValue());
-  };
+
   addAndMakeVisible(rateSlider);
   // Make sure that before the constructor has finished, you've set the
   // editor's size to whatever you need it to be.
