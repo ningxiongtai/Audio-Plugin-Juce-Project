@@ -9,6 +9,15 @@ PluginEditor::PluginEditor(PluginProcessor& p) : AudioProcessorEditor(&p) {
   addAndMakeVisible(background);
   addAndMakeVisible(logo);
   addAndMakeVisible(lfoVisiualizer);
+  rateSlider.setSliderStyle(juce::Slider::Rotary);
+  rateSlider.setTextBoxStyle(juce::Slider::NoTextBox,false, 0, 0);
+  rateSlider.setPopupDisplayEnabled(true, true, this);
+  rateSlider.setRange(1,30, 0.5);
+  rateSlider.setTextValueSuffix(" Hz");
+  rateSlider.onValueChange = [this] () {
+    DBG("rate slider changed" << rateSlider.getValue());
+  };
+  addAndMakeVisible(rateSlider);
   // Make sure that before the constructor has finished, you've set the
   // editor's size to whatever you need it to be.
   setSize(540, 270);
@@ -20,6 +29,12 @@ void PluginEditor::resized() {
   background.setBounds(bounds);
 
   logo.setBounds({16, 16, 105, 24});
+  auto rateSliderBounds = bounds;
+  rateSliderBounds.removeFromLeft(230);
+  rateSliderBounds.removeFromRight(230);
+  rateSliderBounds.removeFromTop(40);
+  rateSliderBounds.removeFromBottom(150);
+  rateSlider.setBounds(rateSliderBounds);
 
   lfoVisiualizer.setBounds(18, 149, 504, 92);
 }
