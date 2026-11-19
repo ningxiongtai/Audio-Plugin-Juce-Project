@@ -1,5 +1,6 @@
 #pragma once
 #include "LfoVisualizer.h"
+#include "RateSlider.h"
 
 namespace tremolo {
 class PluginEditor : public juce::AudioProcessorEditor {
@@ -14,7 +15,7 @@ private:
   juce::ImageComponent background;
   juce::ImageComponent logo;
 
-  juce::Slider rateSlider;
+  RateSlider rateSlider;
 
   juce::SliderParameterAttachment sliderAttachment;
   LfoVisualizer lfoVisiualizer;
