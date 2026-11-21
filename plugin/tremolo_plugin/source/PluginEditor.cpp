@@ -16,7 +16,9 @@ PluginEditor::PluginEditor(PluginProcessor& p) : AudioProcessorEditor(&p) ,
   addAndMakeVisible(lfoVisiualizer);
   addAndMakeVisible(bypassButton);
   addAndMakeVisible(waveformComboBox);
-
+  addAndMakeVisible(rateSlider);
+  addAndMakeVisible(rateLabel);
+  addAndMakeVisible(bypassLabel);
   waveformComboBox.addItemList(p.getParameterRefs().waveform.choices, 1);
   waveformAttachment.sendInitialUpdate();
   rateSlider.setSliderStyle(juce::Slider::Rotary);
@@ -29,7 +31,7 @@ PluginEditor::PluginEditor(PluginProcessor& p) : AudioProcessorEditor(&p) ,
     bypassButton.setButtonText( bypassButton.getToggleState() ? "Bypassed" : "Off");
   };
   bypassButton.onClick();
-  addAndMakeVisible(rateSlider);
+
   setLookAndFeel(&customLookAndFeel);
   // Make sure that before the constructor has finished, you've set the
   // editor's size to whatever you need it to be.
@@ -54,6 +56,10 @@ void PluginEditor::resized() {
   rateSliderBounds.removeFromBottom(150);
   rateSlider.setBounds(rateSliderBounds);
 
+  rateLabel.setBounds(rateSliderBounds);
+  rateLabel.setJustificationType(juce::Justification::centred);
+  rateLabel.setInterceptsMouseClicks(false, false);
+
   auto buttonBounds = bounds;
   buttonBounds.removeFromTop(66);
   buttonBounds.removeFromRight(16);
@@ -61,6 +67,9 @@ void PluginEditor::resized() {
 
   buttonBounds.removeFromLeft(392);
   bypassButton.setBounds(buttonBounds);
+  const auto bypassLabelBounds =
+      buttonBounds.translated(0, -buttonBounds.getHeight());
+  bypassLabel.setBounds(bypassLabelBounds);
 
   auto waveformComboBoxBounds = bounds;
   waveformComboBoxBounds.removeFromTop(66);
@@ -69,6 +78,9 @@ void PluginEditor::resized() {
   waveformComboBoxBounds.removeFromLeft(16);
   waveformComboBox.setBounds(waveformComboBoxBounds);
 
+  const auto waveformLabelBounds =
+    waveformComboBoxBounds.translated(0, -waveformComboBoxBounds.getHeight());
+  waveformLabel.setBounds(waveformLabelBounds);
   lfoVisiualizer.setBounds(18, 149, 504, 92);
 }
 }  // namespace tremolo
